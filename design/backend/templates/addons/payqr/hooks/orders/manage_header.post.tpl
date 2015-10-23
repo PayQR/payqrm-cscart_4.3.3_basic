@@ -1,0 +1,1 @@
+<th width="15%"><a class="" href="#" data-ca-target-id=>Функции PayQR</a></th>

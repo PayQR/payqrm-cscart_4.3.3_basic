@@ -1,0 +1,1 @@
+<script src="https://payqr.ru/popup.js?merchId={$addons.payqr.merchid}"></script>

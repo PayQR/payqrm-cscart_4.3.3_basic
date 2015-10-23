@@ -1,0 +1,653 @@
+<?xml version="1.0"?>
+<addon scheme="3.0">
+    <id>payqr</id>
+    <name>PayQR</name>
+    <version>1.0</version>
+    <settings layout="separate">
+        <sections>
+            <section id="general">
+                <name>Основные настройки</name>
+                <items>
+                    <item id="merchid">
+                        <name>Указать номер магазина в PayQR (merchId)</name>
+                        <type>input</type>
+                    </item>
+                    <item id="keyin">
+                        <name>Указать ключ SecretKeyIn из PayQR</name>
+                        <type>input</type>
+                    </item>
+                    <item id="keyout">
+                        <name>Указать ключ SecretKeyOut из PayQR</name>
+                        <type>input</type>
+                    </item>
+                    <item id="url">
+                        <type>info</type>
+                        <handler>fn_payqr_get_url_input</handler>
+                    </item>
+                </items>
+            </section>
+            <section id="payqr_user_data">
+                <name>Какие данные собирать с покупателей</name>
+                <items>
+                    <item id="name">
+                        <name>Имя</name>
+                        <type>radiogroup</type>
+                        <default_value>default</default_value>
+                        <variants>
+                            <item id="default">
+                                <name>Как в личном кабинете PayQR</name>
+                            </item>
+                            <item id="required">
+                                <name>Требуется</name>
+                            </item>
+                            <item id="deny">
+                                <name>Нет (рекомендовано)</name>
+                            </item>
+                        </variants>
+                    </item>
+                    <item id="lastname">
+                        <name>Фамилия</name>
+                        <type>radiogroup</type>
+                        <default_value>default</default_value>
+                        <variants>
+                            <item id="default">
+                                <name>Как в личном кабинете PayQR</name>
+                            </item>
+                            <item id="required">
+                                <name>Требуется</name>
+                            </item>
+                            <item id="deny">
+                                <name>Нет (рекомендовано)</name>
+                            </item>
+                        </variants>
+                    </item>
+                    <item id="middlename">
+                        <name>Отчество</name>
+                        <type>radiogroup</type>
+                        <default_value>default</default_value>
+                        <variants>
+                            <item id="default">
+                                <name>Как в личном кабинете PayQR</name>
+                            </item>
+                            <item id="required">
+                                <name>Требуется</name>
+                            </item>
+                            <item id="deny">
+                                <name>Нет (рекомендовано)</name>
+                            </item>
+                        </variants>
+                    </item>
+                    <item id="phone">
+                        <name>Номер телефона</name>
+                        <type>radiogroup</type>
+                        <default_value>default</default_value>
+                        <variants>
+                            <item id="default">
+                                <name>Как в личном кабинете PayQR</name>
+                            </item>
+                            <item id="required">
+                                <name>Требуется</name>
+                            </item>
+                            <item id="deny">
+                                <name>Нет (рекомендовано)</name>
+                            </item>
+                        </variants>
+                    </item>
+                </items>
+            </section>
+            <section id="other_buy_settings">
+                <name>Дополнительные настройки сценария покупки</name>
+                <items>
+                    <item id="promo_required">
+                        <name>Собирать промо-коды или карты лояльности</name>
+                        <type>radiogroup</type>
+                        <default_value>default</default_value>
+                        <variants>
+                            <item id="default">
+                                <name>Как в личном кабинете PayQR</name>
+                            </item>
+                            <item id="required">
+                                <name>Требуется</name>
+                            </item>
+                            <item id="deny">
+                                <name>Нет (рекомендовано)</name>
+                            </item>
+                        </variants>
+                    </item>
+                    <item id="promo_text">
+                        <name>Текстовое описание поля для промо-кодов и карт лояльности</name>
+                        <type>input</type>
+                    </item>
+                </items>
+            </section>
+            <section id="message">
+                <name>Сопровождающее сообщение</name>
+                <items>
+                    <item id="order_message">
+                        <name>Сопровождать покупки специальным сообщением в приложении</name>
+                        <type>checkbox</type>
+                    </item>
+                    <item id="order_message_text">
+                        <name>Текст сообщения к покупке</name>
+                        <type>input</type>
+                    </item>
+                    <item id="order_message_image_url">
+                        <name>URL изображения для сообщения к покупке</name>
+                        <type>input</type>
+                    </item>
+                    <item id="order_message_website_image_url">
+                        <name>URL сайта для сообщения к покупке</name>
+                        <type>input</type>
+                    </item>
+                </items>
+            </section>
+            <section id="advanced">
+                <name>Расширенные настройки (для специалистов)</name>
+                <items>
+                    <item id="checkout_button">
+                        <name>Показывать кнопку «Купить быстрее» в корзине</name>
+                        <type>checkbox</type>
+                    </item>
+                    <item id="custom_button">
+                        <name>Настроить основную кнопку «Купить быстрее» в корзине</name>
+                        <type>checkbox</type>
+                    </item>
+                    <item id="color">
+                        <name>Цвет кнопки</name>
+                        <type>selectbox</type>
+                        <default_value>default</default_value>
+                        <variants>
+                            <item id="default">
+                                <name>По умолчанию</name>
+                            </item>
+                            <item id="green">
+                                <name>Зеленый</name>
+                            </item>
+                            <item id="blue">
+                                <name>Синий</name>
+                            </item>
+                            <item id="orange">
+                                <name>Оранжевый</name>
+                            </item>
+                            <item id="red">
+                                <name>Красный</name>
+                            </item>
+                        </variants>
+                    </item>
+                    <item id="border_radius">
+                        <name>Округление краев кнопки</name>
+                        <type>selectbox</type>
+                        <default_value>default</default_value>
+                        <variants>
+                            <item id="default">
+                                <name>По умолчанию</name>
+                            </item>
+                            <item id="soft">
+                                <name>Мягкое округление</name>
+                            </item>
+                            <item id="rude">
+                                <name>Минимальное округление</name>
+                            </item>
+                            <item id="sleek">
+                                <name>Значительное округление</name>
+                            </item>
+                            <item id="oval">
+                                <name>Максимальное округление</name>
+                            </item>
+                            <item id="sharp">
+                                <name>Без округления</name>
+                            </item>
+                        </variants>
+                    </item>
+                    <item id="gradient">
+                        <name>Градиент на кнопке</name>
+                        <type>selectbox</type>
+                        <default_value>default</default_value>
+                        <variants>
+                            <item id="default">
+                                <name>По умолчанию</name>
+                            </item>
+                            <item id="flat">
+                                <name>Отключен</name>
+                            </item>
+                            <item id="gradient">
+                                <name>Включен</name>
+                            </item>
+                        </variants>
+                    </item>
+                    <item id="shadow">
+                        <name>Тень кнопки</name>
+                        <type>selectbox</type>
+                        <default_value>default</default_value>
+                        <variants>
+                            <item id="default">
+                                <name>По умолчанию</name>
+                            </item>
+                            <item id="noshadow">
+                                <name>Отключена</name>
+                            </item>
+                            <item id="shadow">
+                                <name>Включена</name>
+                            </item>
+                        </variants>
+                    </item>
+                    <item id="text_size">
+                        <name>Размер текста</name>
+                        <type>selectbox</type>
+                        <default_value>default</default_value>
+                        <variants>
+                            <item id="default">
+                                <name>По умолчанию</name>
+                            </item>
+                            <item id="small">
+                                <name>Мелко</name>
+                            </item>
+                            <item id="medium">
+                                <name>Средне</name>
+                            </item>
+                            <item id="large">
+                                <name>Крупно</name>
+                            </item>
+                        </variants>
+                    </item>
+                    <item id="text_weight">
+                        <name>Текст жирным</name>
+                        <type>selectbox</type>
+                        <default_value>default</default_value>
+                        <variants>
+                            <item id="default">
+                                <name>По умолчанию</name>
+                            </item>
+                            <item id="bold">
+                                <name>Включен</name>
+                            </item>
+                            <item id="normal">
+                                <name>Отключен</name>
+                            </item>
+                        </variants>
+                    </item>
+                    <item id="text_transform">
+                        <name>Текст строчными</name>
+                        <type>selectbox</type>
+                        <default_value>default</default_value>
+                        <variants>
+                            <item id="default">
+                                <name>По умолчанию</name>
+                            </item>
+                            <item id="upper">
+                                <name>Отключен</name>
+                            </item>
+                            <item id="off">
+                                <name>Включен</name>
+                            </item>
+                        </variants>
+                    </item>
+                    <item id="text_width">
+                        <name>Ширина кнопки, px</name>
+                        <type>input</type>
+                    </item>
+                    <item id="text_height">
+                        <name>Высота кнопки, px</name>
+                        <type>input</type>
+                    </item>
+                    <item id="product_details_button">
+                        <name>Показывать также кнопку «Купить быстрее» в карточках товаров</name>
+                        <type>checkbox</type>
+                    </item>
+                    <item id="product_button_custom_button">
+                        <name>Настроить кнопку «Купить быстрее» в карточках товаров</name>
+                        <type>checkbox</type>
+                    </item>
+                    <item id="product_button_color">
+                        <name>Цвет кнопки</name>
+                        <type>selectbox</type>
+                        <default_value>default</default_value>
+                        <variants>
+                            <item id="default">
+                                <name>По умолчанию</name>
+                            </item>
+                            <item id="green">
+                                <name>Зеленый</name>
+                            </item>
+                            <item id="blue">
+                                <name>Синий</name>
+                            </item>
+                            <item id="orange">
+                                <name>Оранжевый</name>
+                            </item>
+                            <item id="red">
+                                <name>Красный</name>
+                            </item>
+                        </variants>
+                    </item>
+                    <item id="product_button_border_radius">
+                        <name>Округление краев кнопки</name>
+                        <type>selectbox</type>
+                        <default_value>default</default_value>
+                        <variants>
+                            <item id="default">
+                                <name>По умолчанию</name>
+                            </item>
+                            <item id="soft">
+                                <name>Мягкое округление</name>
+                            </item>
+                            <item id="rude">
+                                <name>Минимальное округление</name>
+                            </item>
+                            <item id="sleek">
+                                <name>Значительное округление</name>
+                            </item>
+                            <item id="oval">
+                                <name>Максимальное округление</name>
+                            </item>
+                            <item id="sharp">
+                                <name>Без округления</name>
+                            </item>
+                        </variants>
+                    </item>
+                    <item id="product_button_gradient">
+                        <name>Градиент на кнопке</name>
+                        <type>selectbox</type>
+                        <default_value>default</default_value>
+                        <variants>
+                            <item id="default">
+                                <name>По умолчанию</name>
+                            </item>
+                            <item id="flat">
+                                <name>Отключен</name>
+                            </item>
+                            <item id="gradient">
+                                <name>Включен</name>
+                            </item>
+                        </variants>
+                    </item>
+                    <item id="product_button_shadow">
+                        <name>Тень кнопки</name>
+                        <type>selectbox</type>
+                        <default_value>default</default_value>
+                        <variants>
+                            <item id="default">
+                                <name>По умолчанию</name>
+                            </item>
+                            <item id="noshadow">
+                                <name>Отключена</name>
+                            </item>
+                            <item id="shadow">
+                                <name>Включена</name>
+                            </item>
+                        </variants>
+                    </item>
+                    <item id="product_button_text_size">
+                        <name>Размер текста</name>
+                        <type>selectbox</type>
+                        <default_value>default</default_value>
+                        <variants>
+                            <item id="default">
+                                <name>По умолчанию</name>
+                            </item>
+                            <item id="small">
+                                <name>Мелко</name>
+                            </item>
+                            <item id="medium">
+                                <name>Средне</name>
+                            </item>
+                            <item id="large">
+                                <name>Крупно</name>
+                            </item>
+                        </variants>
+                    </item>
+                    <item id="product_button_text_weight">
+                        <name>Текст жирным</name>
+                        <type>selectbox</type>
+                        <default_value>default</default_value>
+                        <variants>
+                            <item id="default">
+                                <name>По умолчанию</name>
+                            </item>
+                            <item id="bold">
+                                <name>Включен</name>
+                            </item>
+                            <item id="normal">
+                                <name>Отключен</name>
+                            </item>
+                        </variants>
+                    </item>
+                    <item id="product_button_text_transform">
+                        <name>Текст строчными</name>
+                        <type>selectbox</type>
+                        <default_value>default</default_value>
+                        <variants>
+                            <item id="default">
+                                <name>По умолчанию</name>
+                            </item>
+                            <item id="upper">
+                                <name>Отключен</name>
+                            </item>
+                            <item id="off">
+                                <name>Включен</name>
+                            </item>
+                        </variants>
+                    </item>
+                    <item id="product_button_text_width">
+                        <name>Ширина кнопки, px</name>
+                        <type>input</type>
+                    </item>
+                    <item id="product_button_text_height">
+                        <name>Высота кнопки, px</name>
+                        <type>input</type>
+                    </item>
+                    <item id="categories_button">
+                        <name>Показывать кнопку "Купить быстрее" на странице списка товаров</name>
+                        <type>checkbox</type>
+                    </item>
+                    <item id="categories_button_custom_button">
+                        <name>Настроить кнопку "Купить быстрее" на странице списка товаров</name>
+                      <type>checkbox</type>
+                    </item>
+                    <item id="categories_button_color">
+                        <name>Цвет кнопки</name>
+                        <type>selectbox</type>
+                        <default_value>default</default_value>
+                        <variants>
+                            <item id="default">
+                                <name>По умолчанию</name>
+                            </item>
+                            <item id="green">
+                                <name>Зеленый</name>
+                            </item>
+                            <item id="blue">
+                                <name>Синий</name>
+                            </item>
+                            <item id="orange">
+                                <name>Оранжевый</name>
+                            </item>
+                            <item id="red">
+                                <name>Красный</name>
+                            </item>
+                        </variants>
+                    </item>
+                    <item id="categories_button_border_radius">
+                        <name>Округление краев кнопки</name>
+                        <type>selectbox</type>
+                        <default_value>default</default_value>
+                        <variants>
+                            <item id="default">
+                                <name>По умолчанию</name>
+                            </item>
+                            <item id="soft">
+                                <name>Мягкое округление</name>
+                            </item>
+                            <item id="rude">
+                                <name>Минимальное округление</name>
+                            </item>
+                            <item id="sleek">
+                                <name>Значительное округление</name>
+                            </item>
+                            <item id="oval">
+                                <name>Максимальное округление</name>
+                            </item>
+                            <item id="sharp">
+                                <name>Без округления</name>
+                            </item>
+                        </variants>
+                    </item>
+                    <item id="categories_button_gradient">
+                        <name>Градиент на кнопке</name>
+                        <type>selectbox</type>
+                        <default_value>default</default_value>
+                        <variants>
+                            <item id="default">
+                                <name>По умолчанию</name>
+                            </item>
+                            <item id="flat">
+                                <name>Отключен</name>
+                            </item>
+                            <item id="gradient">
+                                <name>Включен</name>
+                            </item>
+                        </variants>
+                    </item>
+                    <item id="categories_button_shadow">
+                        <name>Тень кнопки</name>
+                        <type>selectbox</type>
+                        <default_value>default</default_value>
+                        <variants>
+                            <item id="default">
+                                <name>По умолчанию</name>
+                            </item>
+                            <item id="noshadow">
+                                <name>Отключена</name>
+                            </item>
+                            <item id="shadow">
+                                <name>Включена</name>
+                            </item>
+                        </variants>
+                    </item>
+                    <item id="categories_button_text_size">
+                        <name>Размер текста</name>
+                        <type>selectbox</type>
+                        <default_value>default</default_value>
+                        <variants>
+                            <item id="default">
+                                <name>По умолчанию</name>
+                            </item>
+                            <item id="small">
+                                <name>Мелко</name>
+                            </item>
+                            <item id="medium">
+                                <name>Средне</name>
+                            </item>
+                            <item id="large">
+                                <name>Крупно</name>
+                            </item>
+                        </variants>
+                    </item>
+                    <item id="categories_button_text_weight">
+                        <name>Текст жирным</name>
+                        <type>selectbox</type>
+                        <default_value>default</default_value>
+                        <variants>
+                            <item id="default">
+                                <name>По умолчанию</name>
+                            </item>
+                            <item id="bold">
+                                <name>Включен</name>
+                            </item>
+                            <item id="normal">
+                                <name>Отключен</name>
+                            </item>
+                        </variants>
+                    </item>
+                    <item id="categories_button_text_transform">
+                        <name>Текст строчными</name>
+                        <type>selectbox</type>
+                        <default_value>default</default_value>
+                        <variants>
+                            <item id="default">
+                                <name>По умолчанию</name>
+                            </item>
+                            <item id="upper">
+                                <name>Отключен</name>
+                            </item>
+                            <item id="off">
+                                <name>Включен</name>
+                            </item>
+                        </variants>
+                    </item>
+                    <item id="categories_button_text_width">
+                        <name>Ширина кнопки, px</name>
+                        <type>input</type>
+                    </item>
+                    <item id="categories_button_text_height">
+                        <name>Высота кнопки, px</name>
+                        <type>input</type>
+                    </item>
+                    <item id="payqr_log">
+                        <name>Логировать работу модуля PayQR</name>
+                        <type>checkbox</type>
+                    </item>
+                </items>
+            </section>
+        </sections>
+    </settings>
+
+    <queries>
+        <item for="install">
+            ALTER TABLE  `?:orders` ADD  `payqr_invoice` VARCHAR( 200 ) NOT NULL ,
+            ADD  `payqr_reverts` VARCHAR( 200 ) NOT NULL ;
+        </item>
+
+        <item for="uninstall">
+            ALTER TABLE `?:orders`
+            DROP `payqr_invoice`,
+            DROP `payqr_reverts`;
+        </item>
+
+        <item for="install">
+            ALTER TABLE  `?:categories` ADD  `payqr_category_id` VARCHAR( 11 ) NOT NULL ;
+        </item>
+
+        <item for="uninstall">
+            ALTER TABLE `?:categories` DROP `payqr_category_id`;
+        </item>
+
+        <item for="install">
+            CREATE TABLE IF NOT EXISTS `?:payqr_categories` (
+            `id` int(11) NOT NULL AUTO_INCREMENT,
+            `category_id` varchar(10) NOT NULL,
+            `description` varchar(100) NOT NULL,
+            PRIMARY KEY (`id`)
+            ) ENGINE=InnoDB DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
+        </item>
+
+        <item for="uninstall">
+            DROP TABLE ?:payqr_categories
+        </item>
+    </queries>
+
+    <functions>
+        <item for="install">
+            fn_install_payqr
+        </item>
+
+        <item for="uninstall">
+            fn_uninstall_payqr
+        </item>
+    </functions>
+
+    <language_variables>
+        <item lang="ru" id="payqr_cancel">Аннулировать счет на заказ</item>
+        <item lang="ru" id="payqr_revert">Отменить и вернуть деньги</item>
+        <item lang="ru" id="payqr_confirm">Досрочно запустить расчеты</item>
+        <item lang="ru" id="payqr_execution_confirm">Подтвердить исполнение заказа</item>
+        <item lang="ru" id="payqr_message">Дослать/изменить сообщение</item>
+        <item lang="ru" id="payqr_show_reverts">Показать историю возвратов</item>
+        <item lang="ru" id="payqr_update">Синхронизировать статус с PayQR</item>
+        <item lang="ru" id="confirm_payqr_cancel">Подтверждаете операцию отказа от этого заказа?</item>
+        <item lang="ru" id="confirm_payqr_update">Обновить содержание и статус заказа с серверов PayQR?</item>
+        <item lang="ru" id="confirm_payqr_confirm">Подтверждаете досрочное подтверждение оплаты и
+            запуск расчетов?</item>
+        <item lang="ru" id="confirm_payqr_execution_confirm">Подтверждаете доставку товаров/оказание услуг по этому
+            заказу?</item>
+    </language_variables>
+</addon>

@@ -1,0 +1,1 @@
+<div style="float:right;margin-top:-22px">{""|fn_get_payqr_button nofilter}</div>

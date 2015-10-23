@@ -1,0 +1,1 @@
+{$product|fn_get_payqr_button nofilter}

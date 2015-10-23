@@ -1,0 +1,11 @@
+.payqr-table {
+    display:table;
+}
+.payqr-row {
+    display:table-row;
+}
+
+.payqr-cell {
+    display: table-cell;
+    padding-right: 45px;
+}
